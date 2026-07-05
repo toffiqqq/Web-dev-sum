@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Add Movie</h1>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label>Title</label><br>
+        {{ form.title }}
+        {{ form.title.errors }}
+    </div>
+    <br>
+    <div>
+        <label>Description</label><br>
+        {{ form.description }}
+        {{ form.description.errors }}
+    </div>
+    <br>
+    <div>
+        <label>Year</label><br>
+        {{ form.year }}
+        {{ form.year.errors }}
+    </div>
+    <br>
+    <div>
+        <label>Genre</label><br>
+        {{ form.genre }}
+        {{ form.genre.errors }}
+    </div>
+    <br>
+    <div>
+        <label>Preview</label><br>
+        {{ form.preview }}
+        {{ form.preview.errors }}
+    </div>
+    <br>
+    <div>
+        <label>Video</label><br>
+        {{ form.video }}
+        {{ form.video.errors }}
+    </div>
+    <br>
+    {% if form.non_field_errors %}
+        <div class="error">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+    <button type="submit">Add Movie</button>
+</form>
+{% endblock %}

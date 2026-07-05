@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Add Review</h1>
+<h2>{{ movie.title }}</h2>
+<form method="POST">
+    {% csrf_token %}
+    <div>
+        <label>Review</label><br>
+        {{ form.text }}
+        {{ form.text.errors }}
+    </div>
+    <br>
+    <div>
+        <label>Rating</label><br>
+        {{ form.rating }}
+        {{ form.rating.errors }}
+    </div>
+    <br>
+    {% if form.non_field_errors %}
+        <div class="error">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+    <button type="submit">Add Review</button>
+</form>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Catalog</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <h2>
+                <a href="{% url 'home' %}">Movie Catalog</a>
+            </h2>
+            <ul>
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'movie-add' %}">Add Movie</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'logout-page' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'login-page' %}">Login</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'register-page' %}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        <nav>
+            <h2><a href="{% url 'home' %}">Movie Catalog</a></h2>
+            <p>
+                Movies: {{ movie_count }} |
+                Reviews: {{ review_count }}
+            </p>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>Movie Catalog © 2026</p>
+    </footer>
+
+</body>
+</html>

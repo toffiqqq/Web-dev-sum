@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Movie Catalog</h1>
+{% if movies %}
+    <div class="movie-list">
+        {% for movie in movies %}
+            <div class="movie-card">
+                {% if movie.preview %}
+                    <img src="{{ movie.preview.url }}" alt="{{ movie.title }}" width="200">
+                {% endif %}
+                <h2>{{ movie.title }}</h2>
+                <p><strong>Genre:</strong> {{ movie.genre }}</p>
+                <p><strong>Year:</strong> {{ movie.year }}</p>
+                <a href="{% url 'movie-detail-page' movie.id %}">View Details</a>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+{% else %}
+    <h3>No movies found.</h3>
+{% endif %}
+{% endblock %}

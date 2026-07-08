@@ -23,7 +23,7 @@ class Movie(models.Model):
 
 class Review(models.Model):
     text = models.TextField()
-    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="movies")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -33,7 +33,7 @@ class Review(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.ImageField(upload_to='movies/avatars/', null=True, blank=True)
 
     def __str__(self):
         return self.user.username

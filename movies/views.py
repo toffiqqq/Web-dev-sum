@@ -5,9 +5,9 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Avg, FloatField
 from django.db.models.functions import Coalesce
-from .models import Movie, Genre, Review
+from .models import Movie, Genre, Review, Profile
 from .serializers import GenreSerializer, MovieSerializer, RegisterSerializer, LoginSerializer, ReviewCreateSerializer
-from .forms import MovieForm, RegisterForm, ReviewForm
+from .forms import MovieForm, RegisterForm, ReviewForm, ProfileForm
 
 from rest_framework import status
 from rest_framework.views import APIView
@@ -16,7 +16,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticate
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
-@api_view(["POST"])
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
     serializer = RegisterSerializer(data=request.data)
@@ -27,7 +27,7 @@ def register(request):
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(["POST"])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_review(request):
     serializer = ReviewCreateSerializer(data=request.data, context={"request": request})
@@ -67,7 +67,6 @@ class MovieDetailAPIView(APIView):
 
     def put(self, request, pk):
         movie = self.get_object(pk)
-
         serializer = MovieSerializer(movie, data=request.data)
 
         if serializer.is_valid():
@@ -82,31 +81,28 @@ class MovieDetailAPIView(APIView):
 
         return Response({"message": "Movie deleted"}, status=status.HTTP_204_NO_CONTENT)
 
-@api_view(["POST"])
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def login_api(request):
     serializer = LoginSerializer(data=request.data)
 
     if serializer.is_valid():
         user = authenticate(username=serializer.validated_data["username"], password=serializer.validated_data["password"])
-
         if user is None:
             return Response({"error": "Invalid username or password"}, status=status.HTTP_400_BAD_REQUEST)
 
         token, created = Token.objects.get_or_create(user=user)
-
         return Response({"token": token.key, "username": user.username})
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(["POST"])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout_api(request):
     request.user.auth_token.delete()
     return Response({"message": "Successfully logged out"})
 
 class GenreListAPIView(APIView):
-
     def get(self, request):
         genres = Genre.objects.all()
         serializer = GenreSerializer(genres, many=True)
@@ -146,6 +142,7 @@ def register_page(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            Profile.objects.create(user=user)
             login(request, user)
             return redirect('home')
     else:
@@ -202,3 +199,20 @@ def edit_review(request, pk):
     else:
         form = ReviewForm(instance=review)
     return render(request, 'movies/review_form.html', {'form': form, 'movie': review.movie,})
+
+@login_required
+def profile(request):
+    profile = request.user.profile
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileForm(instance=profile)
+    movies = Movie.objects.filter(user=request.user)
+    reviews = Review.objects.filter(user=request.user)
+    movie_count = movies.count()
+    review_count = reviews.count()
+    avg_rating = movies.aggregate(Avg('reviews__rating'))['reviews__rating__avg']
+    return render(request,'movies/profile.html',{'form': form, 'movies': movies, 'reviews': reviews, 'movie_count': movie_count, 'review_count': review_count, 'avg_rating': avg_rating})

@@ -389,3 +389,67 @@ body {
 .movie-title {
     margin-bottom: 25px;
 }
+
+/*profile*/
+
+/* Profile */
+
+.profile-card {
+    display: flex;
+    gap: 40px;
+    background-color: #252a3d;
+    padding: 30px;
+    border-radius: 12px;
+    margin: 0 150px 40px;
+}
+
+.profile-avatar img,
+.no-avatar {
+    width: 220px;
+    height: 220px;
+    border-radius: 12px;
+}
+
+.profile-avatar img {
+    object-fit: cover;
+}
+
+.no-avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #3b4258;
+    color: white;
+    font-size: 20px;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-info h1 {
+    font-size: 38px;
+    margin-bottom: 25px;
+}
+
+.profile-info p {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.profile-info form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.profile-title {
+    margin: 0 150px 30px;
+    font-size: 32px;
+}
+
+.profile-movies {
+    margin: 0 150px;
+}

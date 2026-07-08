@@ -1,38 +1,66 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>{{ movie.title }}</h1>
-{% if movie.preview %}
-    <img src="{{ movie.preview.url }}" alt="{{ movie.title }}" width="300">
-{% endif %}
-<p>
-    <strong>Genre:</strong>
-    {{ movie.genre }}
-</p>
-<p>
-    <strong>Year:</strong>
-    {{ movie.year }}
-</p>
-<p>
-    <strong>Description:</strong>
-</p>
-<p>
-    {{ movie.description }}
-</p>
-{% if movie.video %}
-    <video width="500" controls><source src="{{ movie.video.url }}"></video>
-{% endif %}
-<h2>Reviews</h2>
-{% if movie.reviews.all %}
-    {% for review in movie.reviews.all %}
-        <hr>
-        <h4>{{ review.user.username }}</h4>
-        <p>Rating: {{ review.rating }}/10</p>
-        <p>{{ review.text }}</p>
-    {% empty %}
-        <p>No reviews yet.</p>
-    {% endfor %}
-{% endif %}
-{% if user.is_authenticated %}
-    <p><a href="{% url 'add-review' movie.id %}">Add Review</a></p>
-{% endif %}
+<div class="movie-detail">
+    <div class="movie-header">
+        <div class="movie-poster">
+            {% if movie.preview %}
+                <img src="{{ movie.preview.url }}" alt="{{ movie.title }}">
+            {% else %}
+                <div class="no-image"> No Image</div>
+            {% endif %}
+        </div>
+        <div class="movie-data">
+            <h1>{{ movie.title }}</h1>
+            {% if avg_rating %}
+                <p>
+                    <strong>Rating:</strong>
+                    {{ avg_rating|floatformat:1 }}/10
+                </p>
+            {% else %}
+                <p>
+                    <strong>Rating:</strong>
+                    No ratings yet
+                </p>
+            {% endif %}
+            <p>
+                <strong>Genre:</strong>
+                {{ movie.genre }}
+            </p>
+            <p>
+                <strong>Year:</strong>
+                {{ movie.year }}
+            </p>
+            <p>
+                <strong>Description:</strong>
+            </p>
+            <p class="movie-description">
+                {{ movie.description }}
+            </p>
+        </div>
+    </div>
+    {% if movie.video %}
+    <div class="movie-video">
+        <h2>Trailer</h2>
+        <video controls><source src="{{ movie.video.url }}"></video>
+    </div>
+    {% endif %}
+    <div class="reviews">
+        <h2>Reviews</h2>
+        {% for review in movie.reviews.all %}
+            <div class="review-card">
+                <h4>{{ review.user.username }}</h4>
+                <p>
+                    <strong>Rating:</strong>
+                    {{ review.rating }}/10
+                </p>
+                <p>{{ review.text }}</p>
+            </div>
+        {% empty %}
+            <p>No reviews yet.</p>
+        {% endfor %}
+    </div>
+    {% if user.is_authenticated %}
+        <a class="review-btn" href="{% url 'add-review' movie.id %}">Add Review</a>
+    {% endif %}
+</div>
 {% endblock %}

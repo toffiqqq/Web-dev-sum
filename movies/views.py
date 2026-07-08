@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.forms import AuthenticationForm
+from django.db.models import Avg, FloatField
+from django.db.models.functions import Coalesce
 from .models import Movie, Genre, Review
 from .serializers import GenreSerializer, MovieSerializer, RegisterSerializer, LoginSerializer, ReviewCreateSerializer
 from .forms import MovieForm, RegisterForm, ReviewForm
@@ -109,14 +111,22 @@ class GenreListAPIView(APIView):
         genres = Genre.objects.all()
         serializer = GenreSerializer(genres, many=True)
         return Response(serializer.data)
-    
+
 def home(request):
-    movies = Movie.objects.all()
-    return render(request, 'movies/home.html', {'movies': movies})
+    movies = Movie.objects.annotate(avg_rating=Coalesce(Avg("reviews__rating"), 0.0, output_field=FloatField(),))
+    genre_id = request.GET.get("genre")
+    if genre_id:
+        movies = movies.filter(genre_id=genre_id)
+    rating = request.GET.get("rating")
+    if rating:
+        movies = movies.filter(avg_rating__gte=float(rating))
+    genres = Genre.objects.all()
+    return render(request, "movies/home.html", {"movies": movies, "genres": genres, "ratings": range(9, -1, -1), "selected_genre": genre_id, "selected_rating": rating})
 
 def movie_detail(request, pk):
     movie = get_object_or_404(Movie, pk=pk)
-    return render(request, 'movies/movie_detail.html', {'movie': movie})
+    avg_rating = movie.reviews.aggregate(Avg('rating'))['rating__avg'] 
+    return render(request, 'movies/movie_detail.html', {'movie': movie, 'avg_rating': avg_rating})
 
 @login_required
 def add_movie(request):

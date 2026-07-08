@@ -1,26 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Add Review</h1>
-<h2>{{ movie.title }}</h2>
-<form method="POST">
-    {% csrf_token %}
-    <div>
-        <label>Review</label><br>
-        {{ form.text }}
-        {{ form.text.errors }}
-    </div>
-    <br>
-    <div>
-        <label>Rating</label><br>
-        {{ form.rating }}
-        {{ form.rating.errors }}
-    </div>
-    <br>
-    {% if form.non_field_errors %}
-        <div class="error">
-            {{ form.non_field_errors }}
+<div class="form-container">
+    <h1>Add Review</h1>
+    <h2 class="movie-title">{{ movie.title }}</h2>
+    <form method="POST" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="errorlist">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <div class="form-group">
+            <label for="{{ form.text.id_for_label }}">Review</label>
+            {{ form.text }}
+            {{ form.text.errors }}
         </div>
-    {% endif %}
-    <button type="submit">Add Review</button>
-</form>
+        <div class="form-group">
+            <label for="{{ form.rating.id_for_label }}">Rating</label>
+            {{ form.rating }}
+            {{ form.rating.errors }}
+        </div>
+        <button class="form-button" type="submit">Add Review</button>
+    </form>
+</div>
 {% endblock %}

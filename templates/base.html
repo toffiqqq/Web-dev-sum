@@ -1,55 +1,65 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Catalog</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body>
-    <header>
-        <nav>
-            <h2>
-                <a href="{% url 'home' %}">Movie Catalog</a>
-            </h2>
-            <ul>
-                <li>
-                    <a href="{% url 'home' %}">Home</a>
-                </li>
-                {% if user.is_authenticated %}
-                    <li>
-                        <a href="{% url 'movie-add' %}">Add Movie</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'logout-page' %}">Logout</a>
-                    </li>
-                {% else %}
-                    <li>
-                        <a href="{% url 'login-page' %}">Login</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'register-page' %}">Register</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
-        <nav>
-            <h2><a href="{% url 'home' %}">Movie Catalog</a></h2>
-            <p>
-                Movies: {{ movie_count }} |
-                Reviews: {{ review_count }}
-            </p>
-        </nav>
-    </header>
 
-    <main>
+<body>
+<header class="header">
+    <div class="logo" href="{% url 'home' %}"><a href="{% url 'home' %}">🎬 Movie Catalog</a></div>
+    <nav class="navbar">
+        <a href="{% url 'home' %}">Home</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'movie-add' %}">Add Movie</a>
+            <a href="{% url 'logout-page' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login-page' %}">Login</a>
+            <a href="{% url 'register-page' %}">Register</a>
+        {% endif %}
+    </nav>
+</header>
+
+<div class="page">
+    <aside class="sidebar">
+        <h3>Categories</h3>
+        <ul>
+            <li>
+                <a href="{% url 'home' %}">All</a>
+            </li>
+            {% for genre in genres %}
+                <li>
+                    <a href="{% url 'home' %}?genre={{ genre.id }}">{{ genre.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <hr class="sidebar-divider">
+        <h3>Rating</h3>
+        <ul>
+
+            <li>
+                <a href="?{% if selected_genre %}genre={{ selected_genre }}{% endif %}">All</a>
+            </li>
+            {% for rating in ratings %}
+                <li>
+                    <a href="?{% if selected_genre %}genre={{ selected_genre }}&{% endif %}rating={{ rating }}"class="{% if selected_rating == rating|stringformat:'s' %}active-category{% endif %}">{{ rating }}+</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </aside>
+
+    <section class="content">
+        <div class="stats">
+            Movies: {{ movie_count }} | Reviews: {{ review_count }}
+        </div>
         {% block content %}
         {% endblock %}
-    </main>
+    </section>
+</div>
 
-    <footer>
-        <p>Movie Catalog © 2026</p>
-    </footer>
-
+<footer class="footer">
+    Movie Catalog © 2026
+</footer>
 </body>
 </html>

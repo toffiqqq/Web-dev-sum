@@ -392,8 +392,6 @@ body {
 
 /*profile*/
 
-/* Profile */
-
 .profile-card {
     display: flex;
     gap: 40px;
@@ -452,4 +450,30 @@ body {
 
 .profile-movies {
     margin: 0 150px;
+}
+
+.upload-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 8px;
+    background: #2ecc71;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: .3s;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.upload-btn:hover {
+    background: #28b463;
+}
+
+.form-button,
+.upload-btn {
+    width: 160px;
+    white-space: nowrap;
 }

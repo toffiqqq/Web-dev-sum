@@ -22,8 +22,9 @@
         </p>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.avatar }}
-            <button class="form-button">Save Avatar</button>
+            <label for="id_avatar" class="upload-btn">Choose Avatar</label>
+            <input type="file" name="avatar" id="id_avatar" hidden>
+            <button type="submit" class="form-button">Save Avatar</button>
         </form>
     </div>
 </div>

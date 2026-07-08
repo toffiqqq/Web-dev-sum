@@ -1,4 +1,4 @@
-from .views import register, create_review, MovieListAPIView, MovieDetailAPIView, GenreListAPIView, login_api, logout_api, home, movie_detail, add_movie, register_page, login_page, logout_page, add_review
+from .views import register, create_review, MovieListAPIView, MovieDetailAPIView, GenreListAPIView, login_api, logout_api, home, movie_detail, add_movie, register_page, login_page, logout_page, add_review, delete_review, edit_review
 from django.urls import path
 
 urlpatterns = [
@@ -9,6 +9,8 @@ urlpatterns = [
     path('register/', register_page, name='register-page'),
     path('login/', login_page, name='login-page'),
     path('logout/', logout_page, name='logout-page'),
+    path('reviews/<int:pk>/delete/', delete_review, name='delete-review'),
+    path('reviews/<int:pk>/edit/', edit_review, name='edit-review'),
 
     path('api/register/', register, name='register'),
     path('api/login/', login_api, name='login'),

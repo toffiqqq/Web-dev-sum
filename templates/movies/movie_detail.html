@@ -54,6 +54,15 @@
                     {{ review.rating }}/10
                 </p>
                 <p>{{ review.text }}</p>
+                {% if user == review.user %}
+                <div class="review-actions"><a class="edit-btn" href="{% url 'edit-review' review.id %}">Edit</a>
+                    <form method="POST"
+                        action="{% url 'delete-review' review.id %}">
+                        {% csrf_token %}
+                        <button class="delete-btn" type="submit">Delete</button>
+                    </form>
+                </div>
+                {% endif %}
             </div>
         {% empty %}
             <p>No reviews yet.</p>

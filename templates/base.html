@@ -22,6 +22,7 @@
 </header>
 
 <div class="page">
+    {% if request.resolver_match.url_name == "home" %}
     <aside class="sidebar">
         <h3>Categories</h3>
         <ul>
@@ -48,6 +49,7 @@
             {% endfor %}
         </ul>
     </aside>
+    {% endif %}
 
     <section class="content">
         <div class="stats">
